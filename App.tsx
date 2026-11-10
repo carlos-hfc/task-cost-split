@@ -4,6 +4,7 @@ import "@/global.css"
 import { Inter_400Regular, Inter_600SemiBold } from "@expo-google-fonts/inter"
 import { Sora_700Bold } from "@expo-google-fonts/sora"
 import { useFonts } from "expo-font"
+import { KeyboardProvider } from "react-native-keyboard-controller"
 
 import { NavigationRoutes } from "@/routes"
 
@@ -17,8 +18,8 @@ export default function App() {
   if (!loaded) return null
 
   return (
-    <>
+    <KeyboardProvider>
       <NavigationRoutes />
-    </>
+    </KeyboardProvider>
   )
 }
