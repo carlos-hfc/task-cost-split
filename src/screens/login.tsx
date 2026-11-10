@@ -1,9 +1,13 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { Image, Text, View } from "react-native"
 
+import { PublicStackParamsList } from "@/@types/navigation"
 import { Button } from "@/components/button"
 import { Input } from "@/components/input"
 
-export function Login() {
+export function Login({
+  navigation,
+}: NativeStackScreenProps<PublicStackParamsList>) {
   return (
     <View className="flex-1">
       <View className="flex-1 items-center justify-center gap-2">
@@ -44,7 +48,12 @@ export function Login() {
             Ainda não tem cadastro?
           </Text>
 
-          <Button variant="secondary">Criar conta</Button>
+          <Button
+            variant="secondary"
+            onPress={() => navigation.navigate("register")}
+          >
+            Criar conta
+          </Button>
         </View>
       </View>
     </View>
