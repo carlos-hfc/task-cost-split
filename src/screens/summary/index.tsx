@@ -1,5 +1,5 @@
 import { LucideIconName } from "@react-native-vector-icons/lucide"
-import { ScrollView, Text, View } from "react-native"
+import { Text, View } from "react-native"
 
 import { Header } from "@/components/header"
 
@@ -47,7 +47,7 @@ const RESUMES = [
 
 export function Summary() {
   return (
-    <ScrollView contentContainerClassName="gap-4 p-6 pt-10 flex-1">
+    <>
       <Header
         title="Resumo"
         subtitle="Acompanhe as informações principais sobre suas atividades"
@@ -91,6 +91,6 @@ export function Summary() {
           </View>
         </View>
       </View>
-    </ScrollView>
+    </>
   )
 }
