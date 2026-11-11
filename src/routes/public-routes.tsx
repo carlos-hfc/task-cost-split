@@ -11,7 +11,7 @@ export function PublicRoutes() {
   return (
     <PublicStack.Navigator
       screenOptions={{ headerShown: false }}
-      screenLayout={({ children }) => <Layout>{children}</Layout>}
+      screenLayout={Layout}
     >
       <PublicStack.Screen
         name="login"

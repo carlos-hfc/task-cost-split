@@ -3,9 +3,15 @@ export type PublicStackParamsList = {
   register: undefined
 }
 
+export type PrivateStackParamsList = {
+  summary: undefined
+  activities: undefined
+  participants: undefined
+}
+
 declare global {
   namespace ReactNavigation {
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface RootParamList extends PublicStackParamsList {}
+    interface RootParamList
+      extends PublicStackParamsList, PrivateStackParamsList {}
   }
 }
