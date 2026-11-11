@@ -65,7 +65,9 @@ export function Button({
         )}
 
         {children && (
-          <Text className={clsx("text-base", textVariants)}>{children}</Text>
+          <Text className={clsx("text-base font-inter", textVariants)}>
+            {children}
+          </Text>
         )}
       </TouchableOpacity>
     </ButtonContext.Provider>
