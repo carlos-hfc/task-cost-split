@@ -29,7 +29,7 @@ export function Avatar({ initials, size = "lg", className }: AvatarProps) {
         className,
       )}
     >
-      <Text className={clsx("text-gray-200 font-sora", textSize)}>
+      <Text className={clsx("text-gray-200 font-sora uppercase", textSize)}>
         {initials}
       </Text>
     </View>

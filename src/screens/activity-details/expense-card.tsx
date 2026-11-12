@@ -1,14 +1,21 @@
 import clsx from "clsx"
+import { useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
 
 import { Avatar } from "@/components/avatar"
+import { BottomSheet } from "@/components/bottom-sheet"
 import { ExpenseStatus } from "@/components/expense-status"
 import { currencyFormatter } from "@/utils/currency-formatter"
 
+import { ExpenseDetailsSheet } from "./expense-details-sheet"
+
 export function ExpenseCard() {
+  const [isOpenBottomSheet, setIsOpenBottomSheet] = useState(false)
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
+      onPress={() => setIsOpenBottomSheet(true)}
       className="border border-gray-600 bg-gray-700 rounded-lg p-4 gap-3"
     >
       <View className="flex-row justify-between gap-2">
@@ -42,6 +49,24 @@ export function ExpenseCard() {
 
         <ExpenseStatus type="paid" />
       </View>
+
+      <BottomSheet
+        onClose={() => setIsOpenBottomSheet(false)}
+        open={isOpenBottomSheet}
+        titleComponent={
+          <View className="gap-1">
+            <Text className="text-gray-100 text-xl font-inter-semibold">
+              Aluguel da casa
+            </Text>
+
+            <Text className="text-green-light text-base font-inter-semibold">
+              {currencyFormatter.format(2200)}
+            </Text>
+          </View>
+        }
+      >
+        <ExpenseDetailsSheet />
+      </BottomSheet>
     </TouchableOpacity>
   )
 }
