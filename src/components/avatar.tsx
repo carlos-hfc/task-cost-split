@@ -1,7 +1,7 @@
 import clsx from "clsx"
 import { Text, View } from "react-native"
 
-type AvatarSize = "sm" | "md"
+type AvatarSize = "sm" | "md" | "lg"
 
 interface AvatarProps {
   initials: string
@@ -9,14 +9,15 @@ interface AvatarProps {
   className?: string
 }
 
-export function Avatar({ initials, size = "md", className }: AvatarProps) {
+export function Avatar({ initials, size = "lg", className }: AvatarProps) {
   const avatarSize = clsx({
-    "size-10": size === "md",
+    "size-10": size === "lg",
+    "size-8": size === "md",
     "size-7": size === "sm",
   })
 
   const textSize = clsx({
-    "text-sm": size === "md",
+    "text-sm": size === "md" || size === "lg",
     "text-xs": size === "sm",
   })
 
