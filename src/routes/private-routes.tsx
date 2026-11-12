@@ -1,12 +1,17 @@
 import Lucide from "@react-native-vector-icons/lucide"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import clsx from "clsx"
 import { Text, TouchableOpacity, View } from "react-native"
 
-import { PrivateStackParamsList } from "@/@types/navigation"
+import {
+  ActivityStackParamsList,
+  PrivateStackParamsList,
+} from "@/@types/navigation"
 import { colors } from "@/colors"
 import { Layout } from "@/components/layout"
 import { Activities } from "@/screens/activities"
+import { ActivityDetails } from "@/screens/activity-details"
 import { Participants } from "@/screens/participants"
 import { Summary } from "@/screens/summary"
 
@@ -15,6 +20,7 @@ const PrivateStack = createBottomTabNavigator<PrivateStackParamsList>()
 export function PrivateRoutes() {
   return (
     <PrivateStack.Navigator
+      initialRouteName="summary"
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
@@ -57,8 +63,10 @@ export function PrivateRoutes() {
     >
       <PrivateStack.Screen
         name="activities"
-        component={Activities}
+        component={ActivitiesRoutes}
+        layout={({ children }) => <>{children}</>}
         options={{
+          headerShown: false,
           title: "Atividades",
           tabBarIcon({ focused }) {
             return (
@@ -104,5 +112,35 @@ export function PrivateRoutes() {
         }}
       />
     </PrivateStack.Navigator>
+  )
+}
+
+const ActivityStackNavigator =
+  createNativeStackNavigator<ActivityStackParamsList>()
+
+export function ActivitiesRoutes() {
+  return (
+    <ActivityStackNavigator.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      screenLayout={props => (
+        <Layout>
+          <View
+            {...props}
+            className="gap-4 p-6 pt-10 flex-1"
+          />
+        </Layout>
+      )}
+    >
+      <ActivityStackNavigator.Screen
+        name="list"
+        component={Activities}
+      />
+      <ActivityStackNavigator.Screen
+        name="details"
+        component={ActivityDetails}
+      />
+    </ActivityStackNavigator.Navigator>
   )
 }
