@@ -4,6 +4,7 @@ import { useMemo } from "react"
 import { Text, View } from "react-native"
 
 import { colors } from "@/colors"
+import { currencyFormatter } from "@/utils/currency-formatter"
 
 export type SummaryCardType = "total" | "paid" | "pending"
 
@@ -38,15 +39,6 @@ export function SummaryCard({ amount, type, qty, text }: SummaryCardProps) {
     }[type]
   }, [type])
 
-  const formattedAmount = useMemo(() => {
-    return amount
-      .toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      })
-      .split("R$")[1]
-  }, [amount])
-
   return (
     <View className="border border-gray-600 rounded-lg p-4 gap-4 flex-row items-center">
       <View
@@ -64,7 +56,10 @@ export function SummaryCard({ amount, type, qty, text }: SummaryCardProps) {
 
       <View className="gap-1">
         <Text className="text-sm font-sora text-gray-200">
-          R$ <Text className="text-xl">{formattedAmount}</Text>
+          R${" "}
+          <Text className="text-xl">
+            {currencyFormatter.format(amount).split("R$")[1]}
+          </Text>
         </Text>
         <Text className="font-inter text-gray-300 text-sm">
           {text}{" "}

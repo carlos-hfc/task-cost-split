@@ -1,11 +1,12 @@
 import Lucide from "@react-native-vector-icons/lucide"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import clsx from "clsx"
-import { ScrollView, Text, TouchableOpacity } from "react-native"
+import { Text, TouchableOpacity, View } from "react-native"
 
 import { PrivateStackParamsList } from "@/@types/navigation"
 import { colors } from "@/colors"
 import { Layout } from "@/components/layout"
+import { Activities } from "@/screens/activities"
 import { Participants } from "@/screens/participants"
 import { Summary } from "@/screens/summary"
 
@@ -47,16 +48,16 @@ export function PrivateRoutes() {
       }}
       screenLayout={props => (
         <Layout>
-          <ScrollView
+          <View
             {...props}
-            contentContainerClassName="gap-4 p-6 pt-10 flex-1"
+            className="gap-4 p-6 pt-10 flex-1"
           />
         </Layout>
       )}
     >
       <PrivateStack.Screen
         name="activities"
-        component={Summary}
+        component={Activities}
         options={{
           title: "Atividades",
           tabBarIcon({ focused }) {

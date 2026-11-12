@@ -33,7 +33,7 @@ export function Input({ icon, ...props }: InputProps) {
         <Lucide
           name={icon}
           size={20}
-          color={colors.white}
+          color={colors.gray[300]}
         />
       )}
 

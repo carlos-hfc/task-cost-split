@@ -65,7 +65,7 @@ export function Button({
         )}
 
         {children && (
-          <Text className={clsx("text-base font-inter", textVariants)}>
+          <Text className={clsx("text-base font-inter-semibold", textVariants)}>
             {children}
           </Text>
         )}
