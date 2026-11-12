@@ -1,5 +1,7 @@
 import { Text, View } from "react-native"
 
+import { Avatar } from "@/components/avatar"
+
 interface ParticipantCardProps {
   name: string
   activityAmount: number
@@ -16,9 +18,7 @@ export function ParticipantCard({
 
   return (
     <View className="border border-gray-600 rounded-lg p-3 gap-4 flex-row">
-      <View className="rounded-full bg-gray-600 items-center justify-center size-10">
-        <Text className="text-gray-200 font-sora text-sm">{initials}</Text>
-      </View>
+      <Avatar initials={initials} />
 
       <View className="gap-1">
         <Text className="text-gray-100 font-inter text-base">{name}</Text>

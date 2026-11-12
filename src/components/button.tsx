@@ -39,7 +39,7 @@ export function Button({
 
   const color = {
     primary: colors.gray[800],
-    secondary: colors.gray[200],
+    secondary: colors.gray[300],
     danger: colors.danger.light,
   }
 
@@ -49,9 +49,9 @@ export function Button({
     <ButtonContext.Provider value={{ variant }}>
       <TouchableOpacity
         className={clsx(
-          "h-12 px-4 py-3 flex-row gap-2 items-center justify-center rounded-full",
+          "h-12 flex-row gap-2 items-center justify-center rounded-full",
           buttonVariants,
-          !HAS_CHILDREN && "size-12 px-0 py-0",
+          !HAS_CHILDREN ? "size-12 p-0" : "px-4 py-3",
           className,
         )}
         {...props}
