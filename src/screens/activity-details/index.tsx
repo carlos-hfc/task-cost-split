@@ -80,7 +80,11 @@ export function ActivityDetails() {
       <BottomSheet
         onClose={() => setIsOpenBottomSheet(false)}
         open={isOpenBottomSheet}
-        title="Nova despesa"
+        titleComponent={
+          <Text className="text-gray-100 text-base font-inter-semibold">
+            Nova despesa
+          </Text>
+        }
       >
         <NewExpenseSheet />
       </BottomSheet>

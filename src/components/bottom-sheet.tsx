@@ -1,12 +1,17 @@
 import Lucide from "@react-native-vector-icons/lucide"
 import clsx from "clsx"
-import { PropsWithChildren, useCallback, useEffect, useRef } from "react"
+import {
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react"
 import {
   Animated,
   Dimensions,
   Keyboard,
   Modal,
-  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -20,14 +25,14 @@ const { height } = Dimensions.get("screen")
 interface BottomSheetProps extends PropsWithChildren {
   open: boolean
   onClose(): void
-  title?: string
+  titleComponent?: ReactNode
 }
 
 export function BottomSheet({
   children,
   onClose,
   open,
-  title,
+  titleComponent,
 }: BottomSheetProps) {
   const overlay = useRef(new Animated.Value(height)).current
   const container = useRef(new Animated.Value(height)).current
@@ -99,10 +104,8 @@ export function BottomSheet({
         )}
       >
         <SafeAreaView className="px-6 py-8 gap-8">
-          <View className="flex-row items-center justify-between">
-            <Text className="text-gray-100 text-base font-inter-semibold">
-              {title}
-            </Text>
+          <View className="flex-row items-start justify-between">
+            {titleComponent}
 
             <TouchableOpacity onPress={handleBackdropPress}>
               <Lucide
