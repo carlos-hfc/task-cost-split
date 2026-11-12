@@ -1,14 +1,19 @@
 import clsx from "clsx"
+import { useState } from "react"
 import { FlatList, Text, View } from "react-native"
 
 import { Avatar } from "@/components/avatar"
+import { BottomSheet } from "@/components/bottom-sheet"
 import { Button } from "@/components/button"
 import { currencyFormatter } from "@/utils/currency-formatter"
 
 import { DetailsHeader } from "./details-header"
 import { ExpenseCard } from "./expense-card"
+import { NewExpenseSheet } from "./new-expense-sheet"
 
 export function ActivityDetails() {
+  const [isOpenBottomSheet, setIsOpenBottomSheet] = useState(false)
+
   return (
     <>
       <View className="gap-6 flex-1">
@@ -67,9 +72,18 @@ export function ActivityDetails() {
         activeOpacity={0.8}
         icon="plus"
         className="absolute bottom-6 right-6"
+        onPress={() => setIsOpenBottomSheet(true)}
       >
         Nova
       </Button>
+
+      <BottomSheet
+        onClose={() => setIsOpenBottomSheet(false)}
+        open={isOpenBottomSheet}
+        title="Nova despesa"
+      >
+        <NewExpenseSheet />
+      </BottomSheet>
     </>
   )
 }

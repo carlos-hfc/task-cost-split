@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { Text, View } from "react-native"
+import { Text, TouchableOpacity, View } from "react-native"
 
 import { Avatar } from "@/components/avatar"
 import { ExpenseStatus } from "@/components/expense-status"
@@ -7,7 +7,10 @@ import { currencyFormatter } from "@/utils/currency-formatter"
 
 export function ExpenseCard() {
   return (
-    <View className="border border-gray-600 bg-gray-700 rounded-lg p-4 gap-3">
+    <TouchableOpacity
+      activeOpacity={0.8}
+      className="border border-gray-600 bg-gray-700 rounded-lg p-4 gap-3"
+    >
       <View className="flex-row justify-between gap-2">
         <Text className="text-gray-100 text-base font-inter-semibold">
           Aluguel da casa
@@ -39,6 +42,6 @@ export function ExpenseCard() {
 
         <ExpenseStatus type="paid" />
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }

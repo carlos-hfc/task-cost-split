@@ -1,5 +1,6 @@
 import Lucide from "@react-native-vector-icons/lucide"
-import { Text, View } from "react-native"
+import { useNavigation } from "@react-navigation/native"
+import { Text, TouchableOpacity, View } from "react-native"
 
 import { colors } from "@/colors"
 import { currencyFormatter } from "@/utils/currency-formatter"
@@ -19,8 +20,14 @@ export function ActivityCard({
   title,
   value,
 }: ActivityCardProps) {
+  const navigation = useNavigation()
+
   return (
-    <View className="p-4 gap-3 rounded-lg border border-gray-600 bg-gray-700">
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => navigation.navigate("activities", { screen: "details" })}
+      className="p-4 gap-3 rounded-lg border border-gray-600 bg-gray-700"
+    >
       <View className="flex-row justify-between items-center">
         <Text className="text-gray-100 font-inter-semibold text-base">
           {title}
@@ -62,6 +69,6 @@ export function ActivityCard({
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }

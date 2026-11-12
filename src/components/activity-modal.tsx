@@ -1,5 +1,4 @@
 import Lucide from "@react-native-vector-icons/lucide"
-import { useNavigation } from "@react-navigation/native"
 import {
   Keyboard,
   Modal,
@@ -21,16 +20,9 @@ interface ActivityModalProps {
 }
 
 export function ActivityModal({ visible, onClose, title }: ActivityModalProps) {
-  const navigation = useNavigation()
-
   function handleBackdropPress() {
     if (Keyboard.isVisible()) return Keyboard.dismiss()
 
-    onClose()
-  }
-
-  function handleNavigateToDetails() {
-    navigation.navigate("activities", { screen: "details" })
     onClose()
   }
 
@@ -70,7 +62,7 @@ export function ActivityModal({ visible, onClose, title }: ActivityModalProps) {
             />
           </View>
 
-          <Button onPress={handleNavigateToDetails}>Salvar</Button>
+          <Button>Salvar</Button>
         </View>
       </View>
     </Modal>
