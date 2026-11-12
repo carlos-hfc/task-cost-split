@@ -7,14 +7,27 @@ import {
   TextInputProps,
   View,
 } from "react-native"
+import CurrencyInput, { CurrencyInputProps } from "react-native-currency-input"
 
 import { colors } from "@/colors"
 
-interface InputProps extends TextInputProps {
+interface BaseProps {
   icon?: LucideIconName
 }
 
-export function Input({ icon, ...props }: InputProps) {
+type DefaultInputProps = BaseProps &
+  TextInputProps & {
+    currency?: false
+  }
+
+type MoneyInputProps = BaseProps &
+  CurrencyInputProps & {
+    currency: true
+  }
+
+type InputProps = DefaultInputProps | MoneyInputProps
+
+export function Input({ icon, currency, ...props }: InputProps) {
   const inputRef = useRef<TextInputInstance>(null)
 
   const [isFocused, setIsFocused] = useState(false)
@@ -37,14 +50,28 @@ export function Input({ icon, ...props }: InputProps) {
         />
       )}
 
-      <TextInput
-        {...props}
-        ref={inputRef}
-        className="h-12 text-base text-gray-200 font-inter flex-1"
-        placeholderTextColor={colors.gray[400]}
-        onFocus={onFocus}
-        onEndEditing={onFocus}
-      />
+      {currency ? (
+        <CurrencyInput
+          {...(props as CurrencyInputProps)}
+          className="h-12 text-base text-gray-200 font-inter flex-1"
+          placeholderTextColor={colors.gray[400]}
+          onFocus={() => setIsFocused(true)}
+          onEndEditing={() => setIsFocused(false)}
+          precision={2}
+          delimiter="."
+          separator=","
+          prefix="R$ "
+        />
+      ) : (
+        <TextInput
+          {...(props as TextInputProps)}
+          ref={inputRef}
+          className="h-12 text-base text-gray-200 font-inter flex-1"
+          placeholderTextColor={colors.gray[400]}
+          onFocus={onFocus}
+          onEndEditing={onFocus}
+        />
+      )}
     </View>
   )
 }
