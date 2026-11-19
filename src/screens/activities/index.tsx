@@ -1,6 +1,8 @@
-import { useState } from "react"
+import { useFocusEffect } from "@react-navigation/native"
+import { useCallback, useState } from "react"
 import { FlatList } from "react-native"
 
+import { ActivityStackScreenProps } from "@/@types/navigation"
 import { ActivityModal } from "@/components/activity-modal"
 import { Button } from "@/components/button"
 import { Header } from "@/components/header"
@@ -16,8 +18,21 @@ const ACTIVITY = {
   expenses: 3,
 }
 
-export function Activities() {
+export function Activities({
+  route,
+  navigation,
+}: ActivityStackScreenProps<"list">) {
   const [isOpenModal, setIsOpenModal] = useState(false)
+
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params?.openModal) {
+        setIsOpenModal(true)
+      }
+
+      navigation.setParams({ openModal: undefined })
+    }, [navigation, route.params?.openModal]),
+  )
 
   return (
     <>

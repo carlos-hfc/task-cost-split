@@ -20,7 +20,7 @@ const PrivateStack = createBottomTabNavigator<PrivateStackParamsList>()
 export function PrivateRoutes() {
   return (
     <PrivateStack.Navigator
-      initialRouteName="summary"
+      initialRouteName="activities"
       screenOptions={{
         headerShown: false,
         tabBarStyle: {

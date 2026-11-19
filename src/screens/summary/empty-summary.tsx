@@ -1,10 +1,13 @@
 import Lucide from "@react-native-vector-icons/lucide"
+import { useNavigation } from "@react-navigation/native"
 import { Text, View } from "react-native"
 
 import { colors } from "@/colors"
 import { Button } from "@/components/button"
 
 export function EmptySummary() {
+  const navigation = useNavigation()
+
   return (
     <View className="items-center justify-center flex-1 gap-4">
       <Lucide
@@ -20,6 +23,12 @@ export function EmptySummary() {
       <Button
         icon="plus"
         className="max-w-48"
+        onPress={() =>
+          navigation.navigate("activities", {
+            screen: "list",
+            params: { openModal: true },
+          })
+        }
       >
         Criar atividade
       </Button>
