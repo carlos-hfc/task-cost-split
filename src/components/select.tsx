@@ -56,6 +56,8 @@ export function Select({
 
   const selectedOptions = options.filter(option => value.includes(option.value))
 
+  const closeSelect = () => setIsOpen(false)
+
   function handleOpen() {
     containerRef.current?.measureInWindow((x, y, width, height) => {
       const screenHeight = Dimensions.get("window").height
@@ -124,12 +126,12 @@ export function Select({
 
       <Modal
         visible={isOpen}
-        onRequestClose={() => setIsOpen(false)}
+        onRequestClose={closeSelect}
         backdropColor="#0009"
         animationType="fade"
       >
         <Pressable
-          onPress={() => setIsOpen(false)}
+          onPress={closeSelect}
           className="flex-1"
         />
 

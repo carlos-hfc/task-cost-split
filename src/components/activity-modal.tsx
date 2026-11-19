@@ -2,9 +2,9 @@ import Lucide from "@react-native-vector-icons/lucide"
 import {
   Keyboard,
   Modal,
+  Pressable,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native"
 
@@ -30,13 +30,14 @@ export function ActivityModal({ visible, onClose, title }: ActivityModalProps) {
     <Modal
       visible={visible}
       animationType="fade"
-      transparent
       onRequestClose={handleBackdropPress}
+      backdropColor={""}
     >
       <View className="flex-1 justify-center px-4">
-        <TouchableWithoutFeedback onPress={handleBackdropPress}>
-          <View className="bg-black/80 px-4 absolute inset-0" />
-        </TouchableWithoutFeedback>
+        <Pressable
+          onPress={handleBackdropPress}
+          className="px-4 absolute inset-0"
+        />
 
         <View className="bg-gray-700 rounded-lg p-6 w-full gap-6">
           <View className="flex-row items-center justify-between">

@@ -12,8 +12,8 @@ import {
   Dimensions,
   Keyboard,
   Modal,
+  Pressable,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
@@ -86,16 +86,17 @@ export function BottomSheet({
 
   return (
     <Modal
-      transparent
       animationType="slide"
       visible={open}
       onRequestClose={handleBackdropPress}
+      backdropColor={""}
     >
-      <TouchableWithoutFeedback onPress={handleBackdropPress}>
-        <Animated.View
-          className={clsx("flex-1 bg-black/60", `opacity-${overlay}`)}
+      <Animated.View className={clsx("flex-1", `opacity-${overlay}`)}>
+        <Pressable
+          onPress={handleBackdropPress}
+          className="absolute inset-0"
         />
-      </TouchableWithoutFeedback>
+      </Animated.View>
 
       <Animated.View
         className={clsx(
