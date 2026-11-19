@@ -14,6 +14,12 @@ export const api = axios.create({
 })
 
 api.interceptors.request.use(async config => {
+  if (env?.EXPO_PUBLIC_API_TIMEOUT) {
+    await new Promise(resolve =>
+      setTimeout(resolve, env.EXPO_PUBLIC_API_TIMEOUT),
+    )
+  }
+
   return config
 })
 
