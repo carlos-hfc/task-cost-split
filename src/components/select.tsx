@@ -1,5 +1,4 @@
 import Lucide, { LucideIconName } from "@react-native-vector-icons/lucide"
-import clsx from "clsx"
 import { useRef, useState } from "react"
 import {
   Dimensions,
@@ -12,6 +11,7 @@ import {
 } from "react-native"
 
 import { colors } from "@/colors"
+import { cn } from "@/utils/cn"
 
 import { Avatar } from "./avatar"
 
@@ -100,7 +100,7 @@ export function Select({
     >
       <Pressable
         onPress={handleOpen}
-        className={clsx(
+        className={cn(
           "h-12 px-4 py-3 rounded-lg bg-gray-800 border border-gray-600 items-center gap-3 flex-row",
           isOpen && "border-white",
         )}
@@ -115,7 +115,7 @@ export function Select({
 
         <Text
           numberOfLines={1}
-          className={clsx(
+          className={cn(
             "text-base font-inter flex-1",
             selectedOptions.length > 0 ? "text-gray-200" : "text-gray-400",
           )}

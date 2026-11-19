@@ -1,9 +1,9 @@
 import Lucide, { LucideIconName } from "@react-native-vector-icons/lucide"
-import clsx from "clsx"
 import { useMemo } from "react"
 import { Text, View } from "react-native"
 
 import { colors } from "@/colors"
+import { cn } from "@/utils/cn"
 import { currencyFormatter } from "@/utils/currency-formatter"
 
 export type SummaryCardType = "total" | "paid" | "pending"
@@ -16,11 +16,11 @@ interface SummaryCardProps {
 }
 
 export function SummaryCard({ amount, type, qty, text }: SummaryCardProps) {
-  const iconContainerVariants = clsx({
-    "bg-success-low": type === "paid",
-    "bg-danger-low": type === "pending",
-    "bg-gray-700": type === "total",
-  })
+  const iconContainerVariants = {
+    paid: "bg-success-low",
+    pending: "bg-danger-low",
+    total: "bg-gray-700",
+  }[type]
 
   const icon = useMemo(() => {
     return {
@@ -42,7 +42,7 @@ export function SummaryCard({ amount, type, qty, text }: SummaryCardProps) {
   return (
     <View className="border border-gray-600 rounded-lg p-4 gap-4 flex-row items-center">
       <View
-        className={clsx(
+        className={cn(
           "rounded-lg size-12 items-center justify-center",
           iconContainerVariants,
         )}

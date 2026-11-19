@@ -1,5 +1,6 @@
-import clsx from "clsx"
 import { Text, View } from "react-native"
+
+import { cn } from "@/utils/cn"
 
 export type ExpenseStatusType = "pending" | "paid" | "partial"
 
@@ -14,26 +15,26 @@ const expenseStatusMap: Record<ExpenseStatusType, string> = {
 }
 
 export function ExpenseStatus({ type }: ExpenseStatusProps) {
-  const viewVariant = clsx({
-    "bg-danger-low": type === "pending",
-    "bg-alert-low": type === "partial",
-    "bg-success-low": type === "paid",
-  })
+  const viewVariant = {
+    pending: "bg-danger-low",
+    partial: "bg-alert-low",
+    paid: "bg-success-low",
+  }[type]
 
-  const textVariant = clsx({
-    "text-danger-light": type === "pending",
-    "text-alert-light": type === "partial",
-    "text-success-light": type === "paid",
-  })
+  const textVariant = {
+    pending: "text-danger-light",
+    partial: "text-alert-light",
+    paid: "text-success-light",
+  }[type]
 
   return (
     <View
-      className={clsx(
+      className={cn(
         "px-2 rounded-lg items-center justify-center h-6",
         viewVariant,
       )}
     >
-      <Text className={clsx("text-xs font-inter", textVariant)}>
+      <Text className={cn("text-xs font-inter", textVariant)}>
         {expenseStatusMap[type]}
       </Text>
     </View>

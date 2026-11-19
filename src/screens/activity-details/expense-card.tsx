@@ -1,10 +1,10 @@
-import clsx from "clsx"
 import { useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
 
 import { Avatar } from "@/components/avatar"
 import { BottomSheet } from "@/components/bottom-sheet"
 import { ExpenseStatus } from "@/components/expense-status"
+import { cn } from "@/utils/cn"
 import { currencyFormatter } from "@/utils/currency-formatter"
 
 import { ExpenseDetailsSheet } from "./expense-details-sheet"
@@ -42,7 +42,7 @@ export function ExpenseCard() {
                 key={i}
                 initials="JS"
                 size="sm"
-                className={clsx("border border-gray-700", i !== 0 && "-ml-2")}
+                className={cn("border border-gray-700", i !== 0 && "-ml-2")}
               />
             ))}
         </View>

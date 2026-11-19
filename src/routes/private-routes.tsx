@@ -1,7 +1,6 @@
 import Lucide from "@react-native-vector-icons/lucide"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import clsx from "clsx"
 import { Text, TouchableOpacity, View } from "react-native"
 
 import {
@@ -14,6 +13,7 @@ import { Activities } from "@/screens/activities"
 import { ActivityDetails } from "@/screens/activity-details"
 import { Participants } from "@/screens/participants"
 import { Summary } from "@/screens/summary"
+import { cn } from "@/utils/cn"
 
 const PrivateStack = createBottomTabNavigator<PrivateStackParamsList>()
 
@@ -44,7 +44,7 @@ export function PrivateRoutes() {
           return (
             <Text
               {...props}
-              className={clsx(
+              className={cn(
                 "text-sm font-inter-semibold",
                 focused ? "text-white" : "text-gray-400",
               )}

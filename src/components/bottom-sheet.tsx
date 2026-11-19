@@ -1,5 +1,4 @@
 import Lucide from "@react-native-vector-icons/lucide"
-import clsx from "clsx"
 import {
   PropsWithChildren,
   ReactNode,
@@ -19,6 +18,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context"
 
 import { colors } from "@/colors"
+import { cn } from "@/utils/cn"
 
 const { height } = Dimensions.get("screen")
 
@@ -91,7 +91,7 @@ export function BottomSheet({
       onRequestClose={handleBackdropPress}
       backdropColor={""}
     >
-      <Animated.View className={clsx("flex-1", `opacity-${overlay}`)}>
+      <Animated.View className={cn("flex-1", `opacity-${overlay}`)}>
         <Pressable
           onPress={handleBackdropPress}
           className="absolute inset-0"
@@ -99,7 +99,7 @@ export function BottomSheet({
       </Animated.View>
 
       <Animated.View
-        className={clsx(
+        className={cn(
           "bg-gray-700 w-full rounded-t-3xl",
           `translate-y-${container}`,
         )}

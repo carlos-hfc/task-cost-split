@@ -1,9 +1,9 @@
 import Lucide, { LucideIconName } from "@react-native-vector-icons/lucide"
-import clsx from "clsx"
 import { createContext } from "react"
 import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native"
 
 import { colors } from "@/colors"
+import { cn } from "@/utils/cn"
 
 type ButtonVariant = "primary" | "secondary" | "danger"
 
@@ -25,17 +25,17 @@ export function Button({
   className,
   ...props
 }: ButtonProps) {
-  const buttonVariants = clsx({
-    "bg-green-base border border-green-light": variant === "primary",
-    "bg-gray-600 border border-gray-500":
-      variant === "secondary" || variant === "danger",
-  })
+  const buttonVariants = {
+    primary: "bg-green-base border border-green-light",
+    secondary: "bg-gray-600 border border-gray-500",
+    danger: "bg-gray-600 border border-gray-500",
+  }[variant]
 
-  const textVariants = clsx({
-    "text-gray-800": variant === "primary",
-    "text-gray-200": variant === "secondary",
-    "text-danger-light": variant === "danger",
-  })
+  const textVariants = {
+    primary: "text-gray-800",
+    secondary: "text-gray-200",
+    danger: "text-danger-light",
+  }[variant]
 
   const color = {
     primary: colors.gray[800],
@@ -48,7 +48,7 @@ export function Button({
   return (
     <ButtonContext.Provider value={{ variant }}>
       <TouchableOpacity
-        className={clsx(
+        className={cn(
           "h-12 flex-row gap-2 items-center justify-center rounded-full",
           buttonVariants,
           !HAS_CHILDREN ? "size-12 p-0" : "px-4 py-3",
@@ -65,7 +65,7 @@ export function Button({
         )}
 
         {children && (
-          <Text className={clsx("text-base font-inter-semibold", textVariants)}>
+          <Text className={cn("text-base font-inter-semibold", textVariants)}>
             {children}
           </Text>
         )}

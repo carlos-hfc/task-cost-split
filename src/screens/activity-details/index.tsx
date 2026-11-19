@@ -1,10 +1,10 @@
-import clsx from "clsx"
 import { useState } from "react"
 import { FlatList, Text, View } from "react-native"
 
 import { Avatar } from "@/components/avatar"
 import { BottomSheet } from "@/components/bottom-sheet"
 import { Button } from "@/components/button"
+import { cn } from "@/utils/cn"
 import { currencyFormatter } from "@/utils/currency-formatter"
 
 import { DetailsHeader } from "./details-header"
@@ -29,10 +29,7 @@ export function ActivityDetails() {
                     key={i}
                     initials="JS"
                     size="sm"
-                    className={clsx(
-                      "border border-gray-800",
-                      i !== 0 && "-ml-2",
-                    )}
+                    className={cn("border border-gray-800", i !== 0 && "-ml-2")}
                   />
                 ))}
             </View>
