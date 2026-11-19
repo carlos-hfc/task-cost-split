@@ -8,6 +8,7 @@ import { StatusBar } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 import { AuthProvider } from "@/contexts/auth-context"
+import { SnackbarProvider } from "@/contexts/snackbar-context"
 import { NavigationRoutes } from "@/routes"
 
 export default function App() {
@@ -23,9 +24,11 @@ export default function App() {
     <SafeAreaView className="flex-1 bg-gray-800">
       <StatusBar barStyle="light-content" />
 
-      <AuthProvider>
-        <NavigationRoutes />
-      </AuthProvider>
+      <SnackbarProvider>
+        <AuthProvider>
+          <NavigationRoutes />
+        </AuthProvider>
+      </SnackbarProvider>
     </SafeAreaView>
   )
 }
