@@ -1,4 +1,7 @@
-import { Image, Text, View } from "react-native"
+import Lucide from "@react-native-vector-icons/lucide"
+import { Image, Text, TouchableOpacity, View } from "react-native"
+
+import { colors } from "@/colors"
 
 interface HeaderProps {
   title: string
@@ -14,9 +17,17 @@ export function Header({ subtitle, title }: HeaderProps) {
           alt="Logo do TaskCost Split"
           className="size-4"
         />
-        <Text className="font-sora text-green-base text-lg">
+        <Text className="font-sora text-green-base text-lg flex-1">
           TaskCost <Text className="text-green-light">Split</Text>
         </Text>
+
+        <TouchableOpacity>
+          <Lucide
+            name="log-out"
+            color={colors.danger.light}
+            size={16}
+          />
+        </TouchableOpacity>
       </View>
 
       <View className="gap-1">
