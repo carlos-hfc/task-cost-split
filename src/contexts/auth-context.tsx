@@ -11,6 +11,7 @@ import {
 
 import { User } from "@/@types/user"
 import { Loading } from "@/components/loading"
+import { STORAGE_USER } from "@/storage"
 
 type AuthContentType = {
   user: User | null
@@ -36,8 +37,6 @@ type SaveDataParams = {
   user: User
   token: string
 }
-
-const STORAGE_USER = "@task-cost-split:user"
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | null>(null)

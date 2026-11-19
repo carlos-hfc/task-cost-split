@@ -49,7 +49,7 @@ export function Button({
     <ButtonContext.Provider value={{ variant }}>
       <TouchableOpacity
         className={cn(
-          "h-12 flex-row gap-2 items-center justify-center rounded-full",
+          "h-12 flex-row gap-2 items-center justify-center rounded-full disabled:opacity-50",
           buttonVariants,
           !HAS_CHILDREN ? "size-12 p-0" : "px-4 py-3",
           className,

@@ -1,7 +1,9 @@
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import axios from "axios"
 import { Platform } from "react-native"
 
 import { env } from "@/env"
+import { STORAGE_USER } from "@/storage"
 import { AppError } from "@/utils/app-error"
 
 const baseURL = Platform.select({
@@ -18,6 +20,14 @@ api.interceptors.request.use(async config => {
     await new Promise(resolve =>
       setTimeout(resolve, env.EXPO_PUBLIC_API_TIMEOUT),
     )
+  }
+
+  const storageData = await AsyncStorage.getItem(STORAGE_USER)
+
+  if (storageData) {
+    const { token } = JSON.parse(storageData) as { token: string }
+
+    if (token) config.headers.Authorization = `Bearer ${token}`
   }
 
   return config
