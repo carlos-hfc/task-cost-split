@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-
 const { colors } = require("./src/colors")
 
 /** @type {import('tailwindcss').Config} */
