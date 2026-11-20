@@ -2,7 +2,6 @@ import { DarkTheme, NavigationContainer } from "@react-navigation/native"
 import { useCallback } from "react"
 
 import { colors } from "@/colors"
-import { Loading } from "@/components/loading"
 import { useAuthContext } from "@/contexts/auth-context"
 
 import { PrivateRoutes } from "./private-routes"
@@ -17,15 +16,13 @@ const AppTheme = {
 }
 
 export function NavigationRoutes() {
-  const { token, user, loading } = useAuthContext()
+  const { token, user } = useAuthContext()
 
   const Routes = useCallback(() => {
-    if (loading) return <Loading />
-
     if (!user || !token) return <PublicRoutes />
 
     return <PrivateRoutes />
-  }, [loading, token, user])
+  }, [token, user])
 
   return (
     <NavigationContainer theme={AppTheme}>
