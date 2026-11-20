@@ -7,6 +7,7 @@ import { ActivityStackScreenProps } from "@/@types/navigation"
 import { ActivityModal } from "@/components/activity-modal"
 import { Button } from "@/components/button"
 import { Header } from "@/components/header"
+import { Loading } from "@/components/loading"
 import { useAuthContext } from "@/contexts/auth-context"
 import { getUserActivities } from "@/http/get-user-activities"
 
@@ -53,6 +54,7 @@ export function Activities({
         subtitle="Organize suas despesas divididas"
       />
 
+      {isLoading && <Loading />}
       {IS_EMPTY && <EmptyActivities />}
 
       <FlatList

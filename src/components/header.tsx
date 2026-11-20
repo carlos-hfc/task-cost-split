@@ -2,6 +2,7 @@ import Lucide from "@react-native-vector-icons/lucide"
 import { Image, Text, TouchableOpacity, View } from "react-native"
 
 import { colors } from "@/colors"
+import { useAuthContext } from "@/contexts/auth-context"
 
 interface HeaderProps {
   title: string
@@ -9,6 +10,8 @@ interface HeaderProps {
 }
 
 export function Header({ subtitle, title }: HeaderProps) {
+  const { handleLogout } = useAuthContext()
+
   return (
     <View className="gap-4">
       <View className="flex-row items-center gap-2">
@@ -21,7 +24,7 @@ export function Header({ subtitle, title }: HeaderProps) {
           TaskCost <Text className="text-green-light">Split</Text>
         </Text>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleLogout}>
           <Lucide
             name="log-out"
             color={colors.danger.light}
