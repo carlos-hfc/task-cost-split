@@ -19,7 +19,7 @@ type AuthContentType = {
   saveData(params: SaveDataParams): void
   handleLogout(): void
   loading: boolean
-  toggleLoading(value: boolean): void
+  toggleLoading(value: boolean, insideModal?: boolean): void
 }
 
 export const AuthContext = createContext<AuthContentType>({
@@ -42,8 +42,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [hideGlobalLoading, setHideGlobalLoading] = useState(false)
 
-  const toggleLoading = (value: boolean) => setLoading(value)
+  const toggleLoading = (value: boolean, insideModal = false) => {
+    setLoading(value)
+    setHideGlobalLoading(value ? insideModal : false)
+  }
 
   async function restoreUserSession() {
     const storageData = await AsyncStorage.getItem(STORAGE_USER)
@@ -108,7 +112,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     <AuthContext.Provider value={value}>
       {children}
 
-      {loading && <Loading />}
+      {loading && !hideGlobalLoading && <Loading />}
     </AuthContext.Provider>
   )
 }
