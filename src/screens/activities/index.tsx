@@ -1,4 +1,5 @@
 import { useFocusEffect } from "@react-navigation/native"
+import { useQuery } from "@tanstack/react-query"
 import { useCallback, useState } from "react"
 import { FlatList } from "react-native"
 
@@ -6,6 +7,8 @@ import { ActivityStackScreenProps } from "@/@types/navigation"
 import { ActivityModal } from "@/components/activity-modal"
 import { Button } from "@/components/button"
 import { Header } from "@/components/header"
+import { useAuthContext } from "@/contexts/auth-context"
+import { getUserActivities } from "@/http/get-user-activities"
 
 import { ActivityCard } from "./activity-card"
 import { EmptyActivities } from "./empty-activities"
@@ -24,6 +27,13 @@ export function Activities({
 }: ActivityStackScreenProps<"list">) {
   const [isOpenModal, setIsOpenModal] = useState(false)
 
+  const { user } = useAuthContext()
+
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["user-activities", user?.id],
+    queryFn: () => getUserActivities({ userId: String(user?.id) }),
+  })
+
   useFocusEffect(
     useCallback(() => {
       if (route.params?.openModal) {
@@ -34,6 +44,8 @@ export function Activities({
     }, [navigation, route.params?.openModal]),
   )
 
+  const IS_EMPTY = data?.activities && data?.activities.length === 0 && !isError
+
   return (
     <>
       <Header
@@ -41,11 +53,12 @@ export function Activities({
         subtitle="Organize suas despesas divididas"
       />
 
-      <EmptyActivities />
+      {IS_EMPTY && <EmptyActivities />}
 
       <FlatList
-        data={Array.from({ length: 15 }).fill(ACTIVITY)}
-        renderItem={({ item }) => <ActivityCard {...(item as any)} />}
+        showsVerticalScrollIndicator={false}
+        data={data?.activities}
+        renderItem={({ item }) => <ActivityCard {...item} />}
         contentContainerClassName="gap-2"
       />
 

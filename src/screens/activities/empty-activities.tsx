@@ -5,7 +5,7 @@ import { colors } from "@/colors"
 
 export function EmptyActivities() {
   return (
-    <View className="items-center justify-center flex-1 gap-4 hidden">
+    <View className="items-center justify-center flex-1 gap-4">
       <Lucide
         name="list"
         size={24}

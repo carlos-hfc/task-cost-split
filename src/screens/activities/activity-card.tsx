@@ -6,19 +6,19 @@ import { colors } from "@/colors"
 import { currencyFormatter } from "@/utils/currency-formatter"
 
 interface ActivityCardProps {
-  title: string
-  date: string
-  value: number
-  participants: number
-  expenses: number
+  name: string
+  activityDate: Date
+  totalAmountInCents: number
+  participantsAmount: number
+  expensesAmount: number
 }
 
 export function ActivityCard({
-  date,
-  expenses,
-  participants,
-  title,
-  value,
+  activityDate,
+  expensesAmount,
+  participantsAmount,
+  name,
+  totalAmountInCents,
 }: ActivityCardProps) {
   const navigation = useNavigation()
 
@@ -30,10 +30,10 @@ export function ActivityCard({
     >
       <View className="flex-row justify-between items-center">
         <Text className="text-gray-100 font-inter-semibold text-base">
-          {title}
+          {name}
         </Text>
         <Text className="text-gray-200 font-inter text-sm">
-          {currencyFormatter.format(value)}
+          {currencyFormatter.format(totalAmountInCents / 100)}
         </Text>
       </View>
 
@@ -44,7 +44,9 @@ export function ActivityCard({
             color={colors.gray[400]}
             size={16}
           />
-          <Text className="text-gray-400 font-inter text-sm">{date}</Text>
+          <Text className="text-gray-400 font-inter text-sm">
+            {new Date(activityDate).toLocaleDateString("pt-br")}
+          </Text>
         </View>
 
         <View className="flex-row gap-2 items-center">
@@ -54,7 +56,7 @@ export function ActivityCard({
             size={16}
           />
           <Text className="text-gray-400 font-inter text-sm">
-            {participants} pessoa(s)
+            {participantsAmount} pessoa(s)
           </Text>
         </View>
 
@@ -65,7 +67,7 @@ export function ActivityCard({
             size={16}
           />
           <Text className="text-gray-400 font-inter text-sm">
-            {expenses} despesa(s)
+            {expensesAmount} despesa(s)
           </Text>
         </View>
       </View>
