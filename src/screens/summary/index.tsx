@@ -1,51 +1,22 @@
-import { LucideIconName } from "@react-native-vector-icons/lucide"
+import { useQuery } from "@tanstack/react-query"
 import { Text, View } from "react-native"
 
 import { Header } from "@/components/header"
+import { Loading } from "@/components/loading"
+import { getUserResume } from "@/http/get-user-resume"
 
 import { EmptySummary } from "./empty-summary"
-import { SummaryCard, SummaryCardType } from "./summary-card"
+import { SummaryCard } from "./summary-card"
 import { SummaryResume } from "./summary-resume"
 
-const SUMMARIES = [
-  {
-    amount: 360,
-    qty: 2,
-    type: "paid" as SummaryCardType,
-    text: "Pago em",
-  },
-  {
-    amount: 1230,
-    qty: 6,
-    type: "pending" as SummaryCardType,
-    text: "Pendente em",
-  },
-  {
-    amount: 6800,
-    type: "total" as SummaryCardType,
-    text: "Total de despesas",
-  },
-]
-
-const RESUMES = [
-  {
-    icon: "list" as LucideIconName,
-    amount: 5,
-    text: "Atividades",
-  },
-  {
-    icon: "circle-dollar-sign" as LucideIconName,
-    amount: 13,
-    text: "Despesas",
-  },
-  {
-    icon: "users" as LucideIconName,
-    amount: 6,
-    text: "Participantes",
-  },
-]
-
 export function Summary() {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["user-resume"],
+    queryFn: getUserResume,
+  })
+
+  const IS_EMPTY = data && data.activitiesCount === 0 && !isError
+
   return (
     <>
       <Header
@@ -53,44 +24,64 @@ export function Summary() {
         subtitle="Acompanhe as informações principais sobre suas atividades"
       />
 
-      <EmptySummary />
+      {isLoading && <Loading />}
+      {IS_EMPTY && <EmptySummary />}
 
-      <View className="gap-4 hidden">
-        <View className="gap-3">
-          <Text className="text-gray-100 font-inter text-sm">
-            Minhas contas
-          </Text>
+      {!IS_EMPTY && data && (
+        <View className="gap-4">
+          <View className="gap-3">
+            <Text className="text-gray-100 font-inter text-sm">
+              Minhas contas
+            </Text>
 
-          {SUMMARIES.slice(0, 2).map(summary => (
             <SummaryCard
-              key={`summary-${summary.type}`}
-              {...summary}
+              type="paid"
+              amount={data.amountPaidInCents / 100}
+              text="Pago em"
+              qty={data.paidExpensesCount}
             />
-          ))}
-        </View>
 
-        <View className="gap-3">
-          <Text className="text-gray-100 font-inter text-sm">
-            Informações gerais
-          </Text>
-
-          {SUMMARIES.slice(2).map(summary => (
             <SummaryCard
-              key={`summary-${summary.type}`}
-              {...summary}
+              type="pending"
+              amount={data.amountToPayInCents / 100}
+              text="Pendente em"
+              qty={data.expensesToPayCount}
             />
-          ))}
+          </View>
 
-          <View className="flex-row gap-2 items-center">
-            {RESUMES.map(resume => (
+          <View className="gap-3">
+            <Text className="text-gray-100 font-inter text-sm">
+              Informações gerais
+            </Text>
+
+            <SummaryCard
+              type="total"
+              amount={data.totalExpensesAmountInCents / 100}
+              text="Total de despesas"
+            />
+
+            <View className="flex-row gap-2 items-center">
               <SummaryResume
-                key={`resume-${resume.icon}`}
-                {...resume}
+                text="Atividades"
+                icon="list"
+                amount={data.activitiesCount}
               />
-            ))}
+
+              <SummaryResume
+                text="Despesas"
+                icon="circle-dollar-sign"
+                amount={data.expensesCount}
+              />
+
+              <SummaryResume
+                text="Participantes"
+                icon="users"
+                amount={data.uniqueParticipantsCount}
+              />
+            </View>
           </View>
         </View>
-      </View>
+      )}
     </>
   )
 }
