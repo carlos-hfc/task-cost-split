@@ -16,11 +16,9 @@ export type ActivityStackParamsList = {
     | {
         openModal?: boolean
       }
-  details:
-    | undefined
-    | {
-        id?: string
-      }
+  details: {
+    id: string
+  }
 }
 
 export type PrivateStackParamsList = {

@@ -1,4 +1,4 @@
-import { User } from "@/@types/user"
+import { Activity } from "@/@types/activity"
 import { api } from "@/lib/axios"
 
 export interface GetUserActivitiesRequest {
@@ -6,15 +6,12 @@ export interface GetUserActivitiesRequest {
 }
 
 export interface GetUserActivitiesResponse {
-  activities: {
-    id: string
-    name: string
-    expensesAmount: number
-    activityDate: Date
-    totalAmountInCents: number
-    participants: User[]
-    participantsAmount: number
-  }[]
+  activities: Array<
+    Activity & {
+      expensesAmount: number
+      participantsAmount: number
+    }
+  >
 }
 
 export async function getUserActivities({ userId }: GetUserActivitiesRequest) {

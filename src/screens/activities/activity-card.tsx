@@ -6,6 +6,7 @@ import { colors } from "@/colors"
 import { currencyFormatter } from "@/utils/currency-formatter"
 
 interface ActivityCardProps {
+  id: string
   name: string
   activityDate: Date
   totalAmountInCents: number
@@ -19,13 +20,16 @@ export function ActivityCard({
   participantsAmount,
   name,
   totalAmountInCents,
+  id,
 }: ActivityCardProps) {
   const navigation = useNavigation()
 
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() => navigation.navigate("activities", { screen: "details" })}
+      onPress={() =>
+        navigation.navigate("activities", { screen: "details", params: { id } })
+      }
       className="p-4 gap-3 rounded-lg border border-gray-600 bg-gray-700"
     >
       <View className="flex-row justify-between items-center">

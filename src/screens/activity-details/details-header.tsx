@@ -5,7 +5,13 @@ import { Text, TouchableOpacity, View } from "react-native"
 import { colors } from "@/colors"
 import { Button } from "@/components/button"
 
-export function DetailsHeader() {
+interface DetailsHeaderProps {
+  id: string
+  name: string
+  activityDate: Date
+}
+
+export function DetailsHeader({ activityDate, id, name }: DetailsHeaderProps) {
   const navigation = useNavigation()
 
   return (
@@ -26,7 +32,7 @@ export function DetailsHeader() {
 
         <View className="gap-1">
           <Text className="text-gray-100 text-xl font-inter-semibold">
-            Férias de verão
+            {name}
           </Text>
 
           <View className="flex-row gap-2 items-center">
@@ -35,7 +41,9 @@ export function DetailsHeader() {
               size={16}
               color={colors.gray[300]}
             />
-            <Text className="text-gray-300 text-sm font-inter">12/12/12</Text>
+            <Text className="text-gray-300 text-sm font-inter">
+              {new Date(activityDate).toLocaleDateString("pt-br")}
+            </Text>
           </View>
         </View>
       </View>
