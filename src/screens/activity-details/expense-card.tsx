@@ -11,6 +11,7 @@ import { currencyFormatter } from "@/utils/currency-formatter"
 import { ExpenseDetailsSheet } from "./expense-details-sheet"
 
 interface ExpenseCardProps {
+  id: string
   name: string
   paymentStatus: ExpenseStatusType
   amountInCents: number
@@ -22,6 +23,7 @@ export function ExpenseCard({
   name,
   participants,
   paymentStatus,
+  id,
 }: ExpenseCardProps) {
   const [isOpenBottomSheet, setIsOpenBottomSheet] = useState(false)
 
@@ -79,7 +81,7 @@ export function ExpenseCard({
           </View>
         }
       >
-        <ExpenseDetailsSheet />
+        <ExpenseDetailsSheet expenseId={id} />
       </BottomSheet>
     </TouchableOpacity>
   )
