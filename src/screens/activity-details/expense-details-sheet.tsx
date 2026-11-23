@@ -20,7 +20,7 @@ export function ExpenseDetailsSheet() {
 
         <View className="border-y border-gray-600 py-4 gap-5">
           <View className="flex-row justify-between gap-4 items-center">
-            <Avatar initials="CF" />
+            <Avatar name="Carlos Faustino" />
 
             <View className="flex-1">
               <Text className="text-gray-200 text-base font-inter-semibold">
@@ -35,7 +35,7 @@ export function ExpenseDetailsSheet() {
           </View>
 
           <View className="flex-row justify-between gap-4 items-center">
-            <Avatar initials="CF" />
+            <Avatar name="Carlos Faustino" />
 
             <View className="flex-1">
               <Text className="text-gray-200 text-base font-inter-semibold">

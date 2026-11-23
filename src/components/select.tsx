@@ -154,7 +154,7 @@ export function Select({
                 className="gap-3 flex-row items-center"
                 onPress={() => toggleSelect(option.value)}
               >
-                <Avatar initials="CF" />
+                <Avatar name="Carlos Faustino" />
 
                 <Text className="flex-1 text-gray-200 text-base font-inter-semibold">
                   {option.label}

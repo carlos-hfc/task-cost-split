@@ -42,7 +42,7 @@ export function NewExpenseSheet() {
               className="flex-row items-center gap-3"
             >
               <Avatar
-                initials="JD"
+                name="Carlos Faustino"
                 size="md"
               />
               <Text className="flex-1 text-gray-200 text-base font-inter-semibold">

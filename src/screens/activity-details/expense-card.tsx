@@ -40,7 +40,7 @@ export function ExpenseCard() {
             .map((_, i) => (
               <Avatar
                 key={i}
-                initials="JS"
+                name="Carlos Faustino"
                 size="sm"
                 className={cn("border border-gray-700", i !== 0 && "-ml-2")}
               />

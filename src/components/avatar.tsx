@@ -5,12 +5,12 @@ import { cn } from "@/utils/cn"
 type AvatarSize = "sm" | "md" | "lg"
 
 interface AvatarProps {
-  initials: string
+  name: string
   size?: AvatarSize
   className?: string
 }
 
-export function Avatar({ initials, size = "lg", className }: AvatarProps) {
+export function Avatar({ name, size = "lg", className }: AvatarProps) {
   const avatarSize = {
     lg: "size-10",
     md: "size-8",
@@ -22,6 +22,11 @@ export function Avatar({ initials, size = "lg", className }: AvatarProps) {
     md: "text-sm",
     sm: "text-xs",
   }[size]
+
+  const initials = name
+    .split(" ")
+    .map(item => item.charAt(0))
+    .join("")
 
   return (
     <View
