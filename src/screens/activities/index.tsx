@@ -1,9 +1,10 @@
 import { useFocusEffect } from "@react-navigation/native"
 import { useQuery } from "@tanstack/react-query"
 import { useCallback, useState } from "react"
-import { FlatList } from "react-native"
+import { FlatList, RefreshControl } from "react-native"
 
 import { ActivityStackScreenProps } from "@/@types/navigation"
+import { colors } from "@/colors"
 import { ActivityModal } from "@/components/activity-modal"
 import { Button } from "@/components/button"
 import { Header } from "@/components/header"
@@ -14,23 +15,15 @@ import { getUserActivities } from "@/http/get-user-activities"
 import { ActivityCard } from "./activity-card"
 import { EmptyActivities } from "./empty-activities"
 
-const ACTIVITY = {
-  title: "Férias de verão",
-  value: 4500,
-  date: "20/12/25",
-  participants: 2,
-  expenses: 3,
-}
-
 export function Activities({
   route,
   navigation,
 }: ActivityStackScreenProps<"list">) {
   const [isOpenModal, setIsOpenModal] = useState(false)
 
-  const { user } = useAuthContext()
+  const { user, loading } = useAuthContext()
 
-  const { data, isError, isLoading } = useQuery({
+  const { data, isError, isLoading, refetch } = useQuery({
     queryKey: ["user-activities", user?.id],
     queryFn: () => getUserActivities({ userId: String(user?.id) }),
   })
@@ -44,6 +37,10 @@ export function Activities({
       navigation.setParams({ openModal: undefined })
     }, [navigation, route.params?.openModal]),
   )
+
+  async function handleRefresh() {
+    await refetch()
+  }
 
   const IS_EMPTY = data?.activities && data?.activities.length === 0 && !isError
 
@@ -62,6 +59,13 @@ export function Activities({
         data={data?.activities}
         renderItem={({ item }) => <ActivityCard {...item} />}
         contentContainerClassName="gap-2"
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={handleRefresh}
+            colors={[colors.green.base]}
+          />
+        }
       />
 
       <Button
