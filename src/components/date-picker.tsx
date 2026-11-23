@@ -13,6 +13,7 @@ interface DatePickerProps {
   onValueChange(date: Date): void
   placeholder?: string
   error?: string
+  minDate?: Date
 }
 
 export function DatePicker({
@@ -20,6 +21,7 @@ export function DatePicker({
   error,
   value,
   onValueChange,
+  minDate,
 }: DatePickerProps) {
   const [showDatePicker, setShowDatePicker] = useState(false)
 
@@ -75,7 +77,7 @@ export function DatePicker({
           value={parsedDate ?? new Date()}
           onValueChange={handleValueChange}
           onDismiss={() => setShowDatePicker(false)}
-          minimumDate={new Date()}
+          minimumDate={minDate}
           timeZoneName="America/Sao_Paulo"
         />
       )}

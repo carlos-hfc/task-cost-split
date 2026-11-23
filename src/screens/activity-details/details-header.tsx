@@ -1,8 +1,10 @@
 import Lucide from "@react-native-vector-icons/lucide"
 import { useNavigation } from "@react-navigation/native"
+import { useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
 
 import { colors } from "@/colors"
+import { ActivityModal } from "@/components/activity-modal"
 import { Button } from "@/components/button"
 
 interface DetailsHeaderProps {
@@ -13,6 +15,8 @@ interface DetailsHeaderProps {
 
 export function DetailsHeader({ activityDate, id, name }: DetailsHeaderProps) {
   const navigation = useNavigation()
+
+  const [isOpenEditActivityModal, setIsOpenEditActivityModal] = useState(false)
 
   return (
     <View className="flex-row gap-2 justify-between">
@@ -51,6 +55,18 @@ export function DetailsHeader({ activityDate, id, name }: DetailsHeaderProps) {
       <Button
         icon="pencil"
         variant="secondary"
+        onPress={() => setIsOpenEditActivityModal(true)}
+      />
+
+      <ActivityModal
+        visible={isOpenEditActivityModal}
+        title="Editar atividade"
+        onClose={() => setIsOpenEditActivityModal(false)}
+        defaultValues={{
+          id,
+          activityDate,
+          title: name,
+        }}
       />
     </View>
   )
