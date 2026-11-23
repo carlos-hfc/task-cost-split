@@ -54,8 +54,8 @@ export function SnackbarProvider({ children }: PropsWithChildren) {
           duration: 400,
           useNativeDriver: true,
         }).start(() => {
-          setMessage(null)
-          setType(null)
+          // setMessage(null)
+          // setType(null)
         })
       }, 5000)
     },
@@ -77,7 +77,7 @@ export function SnackbarProvider({ children }: PropsWithChildren) {
       {message && type && (
         <Animated.View
           className={cn(
-            "absolute bottom-8 p-3 rounded-lg self-center shadow-2xl z-10",
+            "absolute bottom-28 p-3 rounded-lg self-center shadow-2xl z-10",
             type === "success" && "bg-green-900",
             type === "error" && "bg-red-900",
           )}

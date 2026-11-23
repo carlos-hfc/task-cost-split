@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import Lucide from "@react-native-vector-icons/lucide"
+import { useNavigation } from "@react-navigation/native"
 import { useMutation } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
 import {
@@ -14,8 +15,10 @@ import z from "zod"
 
 import { colors } from "@/colors"
 import { useAuthContext } from "@/contexts/auth-context"
+import { useSnackbarContext } from "@/contexts/snackbar-context"
 import { useAppError } from "@/hooks/use-app-error"
 import { addActivity, AddActivityResponse } from "@/http/add-activity"
+import { deleteActivity } from "@/http/delete-activity"
 import { GetActivityResponse } from "@/http/get-activity"
 import { GetUserActivitiesResponse } from "@/http/get-user-activities"
 import { GetUserResumeResponse } from "@/http/get-user-resume"
@@ -66,8 +69,11 @@ export function ActivityModal({
   title,
   defaultValues,
 }: ActivityModalProps) {
+  const navigation = useNavigation()
+
   const { toggleLoading, loading } = useAuthContext()
   const { handleError } = useAppError()
+  const { notify } = useSnackbarContext()
 
   const {
     control,
@@ -93,6 +99,11 @@ export function ActivityModal({
 
       reset()
       onClose()
+
+      notify({
+        message: "Atividade criada com sucesso",
+        type: "success",
+      })
     },
   })
 
@@ -102,6 +113,53 @@ export function ActivityModal({
       updateCache(data)
 
       onClose()
+
+      notify({
+        message: "Atividade atualizada com sucesso",
+        type: "success",
+      })
+    },
+  })
+
+  const { mutateAsync: deleteActivityFn, isPending } = useMutation({
+    mutationFn: deleteActivity,
+    onSuccess(_, { activityId }) {
+      queryClient.invalidateQueries({ queryKey: ["activities", activityId] })
+
+      queryClient.setQueriesData<GetUserActivitiesResponse>(
+        {
+          queryKey: ["user-activities"],
+        },
+        cachedData => {
+          if (!cachedData) return
+
+          return {
+            ...cachedData,
+            activities: cachedData.activities.filter(
+              item => item.id !== activityId,
+            ),
+          }
+        },
+      )
+
+      queryClient.setQueryData<GetUserResumeResponse>(
+        ["user-resume"],
+        cachedData => {
+          if (!cachedData) return
+
+          return {
+            ...cachedData,
+            activitiesCount: cachedData.activitiesCount - 1,
+          }
+        },
+      )
+
+      notify({
+        message: "Atividade excluída com sucesso",
+        type: "success",
+      })
+
+      navigation.goBack()
     },
   })
 
@@ -256,9 +314,12 @@ export function ActivityModal({
           <View className="flex-row justify-between gap-2">
             {IS_EDIT && (
               <Button
-                disabled={isSubmitting}
+                disabled={isPending}
                 icon="trash"
                 variant="danger"
+                onPress={() =>
+                  deleteActivityFn({ activityId: defaultValues.id })
+                }
               />
             )}
 
