@@ -25,7 +25,5 @@ export async function toggleExpenseStatus({
     `/expenses/${expenseId}/participants/${participantId}/payment/toggle`,
   )
 
-  console.log(response.data)
-
   return response.data
 }

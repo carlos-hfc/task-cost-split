@@ -6,6 +6,8 @@ import { Button } from "@/components/button"
 import { ExpenseStatus } from "@/components/expense-status"
 import { Loading } from "@/components/loading"
 import { SelectStatus } from "@/components/select-status"
+import { useSnackbarContext } from "@/contexts/snackbar-context"
+import { deleteExpense } from "@/http/delete-expense"
 import { GetActivityResponse } from "@/http/get-activity"
 import { getExpense, GetExpenseResponse } from "@/http/get-expense"
 import { toggleExpenseStatus } from "@/http/toggle-expense-status"
@@ -17,12 +19,17 @@ interface ExpenseDetailsSheetProps {
 }
 
 export function ExpenseDetailsSheet({ expenseId }: ExpenseDetailsSheetProps) {
+  const { notify } = useSnackbarContext()
+
   const { data, isLoading } = useQuery({
     queryKey: ["expenses", expenseId],
     queryFn: () => getExpense({ expenseId }),
   })
 
-  const { mutateAsync: toggleExpenseStatusFn, isPending } = useMutation({
+  const {
+    mutateAsync: toggleExpenseStatusFn,
+    isPending: isPendingToggleExpenseStatus,
+  } = useMutation({
     mutationFn: toggleExpenseStatus,
     onSuccess({
       paymentStatus,
@@ -126,8 +133,42 @@ export function ExpenseDetailsSheet({ expenseId }: ExpenseDetailsSheetProps) {
           }
         },
       )
+
+      notify({
+        message: "Status da despesa atualizado com sucesso!",
+        type: "success",
+      })
     },
   })
+
+  const { mutateAsync: deleteExpenseFn, isPending: isPendingDeleteExpense } =
+    useMutation({
+      mutationFn: deleteExpense,
+      onSuccess() {
+        queryClient.invalidateQueries({ queryKey: ["expenses", expenseId] })
+
+        queryClient.setQueryData<GetActivityResponse>(
+          ["activities", data?.activityId],
+          cachedData => {
+            if (!cachedData) return
+
+            return {
+              ...cachedData,
+              expenses: cachedData.expenses.filter(
+                item => item.id !== expenseId,
+              ),
+              totalAmountInCents:
+                cachedData.totalAmountInCents - (data?.amountInCents ?? 0),
+            }
+          },
+        )
+
+        notify({
+          message: "Despesa excluída com sucesso!",
+          type: "success",
+        })
+      },
+    })
 
   const amountPaidInCents =
     (data &&
@@ -189,7 +230,7 @@ export function ExpenseDetailsSheet({ expenseId }: ExpenseDetailsSheetProps) {
 
               <SelectStatus
                 status={participant.paymentStatus}
-                disabled={isPending}
+                disabled={isPendingToggleExpenseStatus}
                 onPress={() =>
                   toggleExpenseStatusFn({
                     expenseId,
@@ -206,6 +247,8 @@ export function ExpenseDetailsSheet({ expenseId }: ExpenseDetailsSheetProps) {
         <Button
           icon="trash"
           variant="danger"
+          disabled={isPendingDeleteExpense}
+          onPress={() => deleteExpenseFn({ expenseId })}
         />
 
         <Button
