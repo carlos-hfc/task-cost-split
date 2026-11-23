@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { Text, View } from "react-native"
 
 import { Avatar } from "@/components/avatar"
@@ -6,7 +6,10 @@ import { Button } from "@/components/button"
 import { ExpenseStatus } from "@/components/expense-status"
 import { Loading } from "@/components/loading"
 import { SelectStatus } from "@/components/select-status"
-import { getExpense } from "@/http/get-expense"
+import { GetActivityResponse } from "@/http/get-activity"
+import { getExpense, GetExpenseResponse } from "@/http/get-expense"
+import { toggleExpenseStatus } from "@/http/toggle-expense-status"
+import { queryClient } from "@/lib/react-query"
 import { currencyFormatter } from "@/utils/currency-formatter"
 
 interface ExpenseDetailsSheetProps {
@@ -17,6 +20,113 @@ export function ExpenseDetailsSheet({ expenseId }: ExpenseDetailsSheetProps) {
   const { data, isLoading } = useQuery({
     queryKey: ["expenses", expenseId],
     queryFn: () => getExpense({ expenseId }),
+  })
+
+  const { mutateAsync: toggleExpenseStatusFn, isPending } = useMutation({
+    mutationFn: toggleExpenseStatus,
+    onSuccess({
+      paymentStatus,
+      participantId,
+      participantName,
+      amountPaidInCents,
+      amountOwedInCents,
+      remainingDebtInCents,
+    }) {
+      queryClient.setQueryData<GetExpenseResponse>(
+        ["expenses", expenseId],
+        cachedData => {
+          if (!cachedData) return
+
+          const participants = cachedData.participants.map(participant => {
+            if (participant.userId === participantId) {
+              return {
+                ...participant,
+                paymentStatus,
+                amountPaidInCents,
+                amountOwedInCents,
+                remainingDebtInCents,
+              }
+            }
+
+            return participant
+          })
+
+          const paymentExists = cachedData.payments.some(
+            payment => payment.debtorId === participantId,
+          )
+
+          const payments = paymentExists
+            ? cachedData.payments.map(payment => {
+                if (payment.debtorId === participantId) {
+                  return { ...payment, amountPaidInCents }
+                }
+
+                return payment
+              })
+            : [
+                ...cachedData.payments,
+                {
+                  id: `${expenseId}-${participantId}`,
+                  debtorId: participantId,
+                  debtorName: participantName,
+                  amountPaidInCents,
+                  paidAt: new Date(),
+                },
+              ]
+
+          return {
+            ...cachedData,
+            participants,
+            payments,
+          }
+        },
+      )
+
+      queryClient.setQueryData<GetActivityResponse>(
+        ["activities", data?.activityId],
+        cachedData => {
+          if (!cachedData) return
+
+          return {
+            ...cachedData,
+            expenses: cachedData.expenses.map(item => {
+              if (item.id === expenseId) {
+                const participants = item.participants.map(participant => {
+                  if (participant.id === participantId) {
+                    return {
+                      ...participant,
+                      paymentStatus,
+                    }
+                  }
+
+                  return participant
+                })
+
+                const statuses = participants.map(
+                  participant => participant.paymentStatus,
+                )
+
+                const expenseStatus =
+                  statuses.length === 0 ||
+                  statuses.every(status => status === "pending")
+                    ? "pending"
+                    : statuses.every(status => status === "paid")
+                      ? "paid"
+                      : "partial"
+
+                return {
+                  ...item,
+                  participants,
+                  paymentStatus: expenseStatus,
+                }
+              }
+
+              return item
+            }),
+          }
+        },
+      )
+    },
   })
 
   const amountPaidInCents =
@@ -77,7 +187,16 @@ export function ExpenseDetailsSheet({ expenseId }: ExpenseDetailsSheetProps) {
                 </Text>
               </View>
 
-              <SelectStatus status={participant.paymentStatus} />
+              <SelectStatus
+                status={participant.paymentStatus}
+                disabled={isPending}
+                onPress={() =>
+                  toggleExpenseStatusFn({
+                    expenseId,
+                    participantId: participant.userId,
+                  })
+                }
+              />
             </View>
           ))}
         </View>

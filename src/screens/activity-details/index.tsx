@@ -30,6 +30,8 @@ export function ActivityDetails({
 
   const IS_EMPTY = data && data.expenses.length === 0 && !isError
 
+  console.log(data)
+
   if (isLoading) return <Loading />
 
   if (!data) return null
