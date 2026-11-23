@@ -4,6 +4,7 @@ import { Text, View } from "react-native"
 import { Avatar } from "@/components/avatar"
 import { Button } from "@/components/button"
 import { ExpenseStatus } from "@/components/expense-status"
+import { Loading } from "@/components/loading"
 import { SelectStatus } from "@/components/select-status"
 import { getExpense } from "@/http/get-expense"
 import { currencyFormatter } from "@/utils/currency-formatter"
@@ -13,7 +14,7 @@ interface ExpenseDetailsSheetProps {
 }
 
 export function ExpenseDetailsSheet({ expenseId }: ExpenseDetailsSheetProps) {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["expenses", expenseId],
     queryFn: () => getExpense({ expenseId }),
   })
@@ -27,6 +28,14 @@ export function ExpenseDetailsSheet({ expenseId }: ExpenseDetailsSheetProps) {
         return acc
       }, 0)) ||
     0
+
+  if (isLoading) {
+    return (
+      <View className="h-80">
+        <Loading className="bg-transparent" />
+      </View>
+    )
+  }
 
   if (!data) return null
 
