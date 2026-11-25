@@ -26,6 +26,7 @@ export function EmptyExpenses() {
       <Button
         icon="plus"
         className="max-w-48"
+        onPress={() => setIsOpenBottomSheet(true)}
       >
         Nova despesa
       </Button>
@@ -39,7 +40,7 @@ export function EmptyExpenses() {
           </Text>
         }
       >
-        <NewExpenseSheet />
+        <NewExpenseSheet onClose={() => setIsOpenBottomSheet(false)} />
       </BottomSheet>
     </View>
   )

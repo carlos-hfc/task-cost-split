@@ -99,14 +99,16 @@ export function ActivityDetails({
         )}
       </View>
 
-      <Button
-        activeOpacity={0.8}
-        icon="plus"
-        className="absolute bottom-6 right-6"
-        onPress={() => setIsOpenBottomSheet(true)}
-      >
-        Nova
-      </Button>
+      {!IS_EMPTY && (
+        <Button
+          activeOpacity={0.8}
+          icon="plus"
+          className="absolute bottom-6 right-6"
+          onPress={() => setIsOpenBottomSheet(true)}
+        >
+          Nova
+        </Button>
+      )}
 
       <BottomSheet
         onClose={() => setIsOpenBottomSheet(false)}
@@ -117,7 +119,7 @@ export function ActivityDetails({
           </Text>
         }
       >
-        <NewExpenseSheet />
+        <NewExpenseSheet onClose={() => setIsOpenBottomSheet(false)} />
       </BottomSheet>
     </>
   )

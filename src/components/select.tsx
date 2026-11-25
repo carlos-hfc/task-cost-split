@@ -27,6 +27,7 @@ interface SelectProps {
   value: string[]
   onValueChange(value: string[]): void
   offset?: number
+  error?: string
 }
 
 interface DropdownPosition {
@@ -45,6 +46,7 @@ export function Select({
   placeholder,
   onValueChange,
   offset = 8,
+  error,
 }: SelectProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [position, setPosition] = useState<DropdownPosition>({
@@ -97,6 +99,7 @@ export function Select({
     <View
       ref={containerRef}
       collapsable={false}
+      className="gap-1"
     >
       <Pressable
         onPress={handleOpen}
@@ -123,6 +126,18 @@ export function Select({
           {placeholder}
         </Text>
       </Pressable>
+
+      {error && (
+        <View className="flex-row items-center gap-1.5">
+          <Lucide
+            name="circle-alert"
+            color={colors.danger.light}
+            size={14}
+          />
+
+          <Text className="text-danger-light text-sm font-inter">{error}</Text>
+        </View>
+      )}
 
       <Modal
         visible={isOpen}
@@ -154,7 +169,7 @@ export function Select({
                 className="gap-3 flex-row items-center"
                 onPress={() => toggleSelect(option.value)}
               >
-                <Avatar name="Carlos Faustino" />
+                <Avatar name={option.label} />
 
                 <Text className="flex-1 text-gray-200 text-base font-inter-semibold">
                   {option.label}

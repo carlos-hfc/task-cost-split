@@ -10,6 +10,7 @@ import { useSnackbarContext } from "@/contexts/snackbar-context"
 import { deleteExpense } from "@/http/delete-expense"
 import { GetActivityResponse } from "@/http/get-activity"
 import { getExpense, GetExpenseResponse } from "@/http/get-expense"
+import { GetUserActivitiesResponse } from "@/http/get-user-activities"
 import { toggleExpenseStatus } from "@/http/toggle-expense-status"
 import { queryClient } from "@/lib/react-query"
 import { currencyFormatter } from "@/utils/currency-formatter"
@@ -145,7 +146,32 @@ export function ExpenseDetailsSheet({ expenseId }: ExpenseDetailsSheetProps) {
     useMutation({
       mutationFn: deleteExpense,
       onSuccess() {
-        queryClient.invalidateQueries({ queryKey: ["expenses", expenseId] })
+        queryClient.removeQueries({ queryKey: ["expenses", expenseId] })
+
+        queryClient.setQueriesData<GetUserActivitiesResponse>(
+          {
+            queryKey: ["user-activities"],
+          },
+          cachedData => {
+            if (!cachedData) return
+
+            return {
+              ...cachedData,
+              activities: cachedData.activities.map(item => {
+                if (item.id === data?.activityId) {
+                  return {
+                    ...item,
+                    expensesAmount: item.expensesAmount - 1,
+                    totalAmountInCents:
+                      item.totalAmountInCents - (data?.amountInCents ?? 0),
+                  }
+                }
+
+                return item
+              }),
+            }
+          },
+        )
 
         queryClient.setQueryData<GetActivityResponse>(
           ["activities", data?.activityId],
