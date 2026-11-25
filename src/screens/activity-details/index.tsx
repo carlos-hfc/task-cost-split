@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
-import { useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { FlatList, Text, View } from "react-native"
 
+import { Expense } from "@/@types/expense"
 import { ActivityStackScreenProps } from "@/@types/navigation"
 import { Avatar } from "@/components/avatar"
 import { BottomSheet } from "@/components/bottom-sheet"
@@ -14,7 +15,8 @@ import { currencyFormatter } from "@/utils/currency-formatter"
 import { DetailsHeader } from "./details-header"
 import { EmptyExpenses } from "./empty-expenses"
 import { ExpenseCard } from "./expense-card"
-import { NewExpenseSheet } from "./new-expense-sheet"
+import { ExpenseDetailsSheet } from "./expense-details-sheet"
+import { ExpenseSheet } from "./expense-sheet"
 
 export function ActivityDetails({
   route,
@@ -22,11 +24,35 @@ export function ActivityDetails({
   const activityId = route.params.id
 
   const [isOpenBottomSheet, setIsOpenBottomSheet] = useState(false)
+  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null)
+  const [isEdit, setIsEdit] = useState(false)
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["activities", activityId],
     queryFn: () => getActivity({ activityId }),
   })
+
+  const handleClose = useCallback(() => {
+    setSelectedExpense(null)
+    setIsEdit(false)
+  }, [])
+
+  const titleContent = useMemo(
+    () => (
+      <View className="gap-1">
+        <Text className="text-gray-100 text-xl font-inter-semibold">
+          {isEdit ? "Editar despesa" : selectedExpense?.name}
+        </Text>
+
+        {!isEdit && selectedExpense?.amountInCents && (
+          <Text className="text-green-light text-base font-inter-semibold">
+            {currencyFormatter.format(selectedExpense.amountInCents / 100)}
+          </Text>
+        )}
+      </View>
+    ),
+    [isEdit, selectedExpense],
+  )
 
   const IS_EMPTY = data && data.expenses.length === 0 && !isError
 
@@ -91,7 +117,15 @@ export function ActivityDetails({
               <FlatList
                 data={data.expenses}
                 keyExtractor={item => item.id}
-                renderItem={({ item }) => <ExpenseCard {...item} />}
+                renderItem={({ item }) => (
+                  <ExpenseCard
+                    {...item}
+                    onPress={() => {
+                      setSelectedExpense(item)
+                      setIsEdit(false)
+                    }}
+                  />
+                )}
                 contentContainerClassName="gap-2"
               />
             </View>
@@ -119,7 +153,26 @@ export function ActivityDetails({
           </Text>
         }
       >
-        <NewExpenseSheet onClose={() => setIsOpenBottomSheet(false)} />
+        <ExpenseSheet onClose={() => setIsOpenBottomSheet(false)} />
+      </BottomSheet>
+
+      <BottomSheet
+        onClose={handleClose}
+        open={Boolean(selectedExpense)}
+        titleComponent={titleContent}
+      >
+        {selectedExpense &&
+          (isEdit ? (
+            <ExpenseSheet
+              expenseId={selectedExpense.id}
+              onClose={handleClose}
+            />
+          ) : (
+            <ExpenseDetailsSheet
+              expenseId={selectedExpense.id}
+              onEdit={() => setIsEdit(true)}
+            />
+          ))}
       </BottomSheet>
     </>
   )

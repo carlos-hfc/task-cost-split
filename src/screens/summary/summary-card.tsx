@@ -63,7 +63,9 @@ export function SummaryCard({ amount, type, qty, text }: SummaryCardProps) {
         </Text>
         <Text className="font-inter text-gray-300 text-sm">
           {text}{" "}
-          {qty && <Text className="font-inter-semibold">{qty} despesa(s)</Text>}
+          {(qty || qty === 0) && (
+            <Text className="font-inter-semibold">{qty} despesa(s)</Text>
+          )}
         </Text>
       </View>
     </View>

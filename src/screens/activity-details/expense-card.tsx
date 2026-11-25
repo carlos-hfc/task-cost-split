@@ -1,14 +1,10 @@
-import { useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
 
 import { User } from "@/@types/user"
 import { Avatar } from "@/components/avatar"
-import { BottomSheet } from "@/components/bottom-sheet"
 import { ExpenseStatus, ExpenseStatusType } from "@/components/expense-status"
 import { cn } from "@/utils/cn"
 import { currencyFormatter } from "@/utils/currency-formatter"
-
-import { ExpenseDetailsSheet } from "./expense-details-sheet"
 
 interface ExpenseCardProps {
   id: string
@@ -16,6 +12,7 @@ interface ExpenseCardProps {
   paymentStatus: ExpenseStatusType
   amountInCents: number
   participants: User[]
+  onPress?(): void
 }
 
 export function ExpenseCard({
@@ -24,16 +21,15 @@ export function ExpenseCard({
   participants,
   paymentStatus,
   id,
+  onPress,
 }: ExpenseCardProps) {
-  const [isOpenBottomSheet, setIsOpenBottomSheet] = useState(false)
-
   const amount = amountInCents / 100
   const amountPerPerson = amount / participants.length
 
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() => setIsOpenBottomSheet(true)}
+      onPress={onPress}
       className="border border-gray-600 bg-gray-700 rounded-lg p-4 gap-3"
     >
       <View className="flex-row justify-between gap-2">
@@ -65,24 +61,6 @@ export function ExpenseCard({
 
         <ExpenseStatus type={paymentStatus} />
       </View>
-
-      <BottomSheet
-        onClose={() => setIsOpenBottomSheet(false)}
-        open={isOpenBottomSheet}
-        titleComponent={
-          <View className="gap-1">
-            <Text className="text-gray-100 text-xl font-inter-semibold">
-              {name}
-            </Text>
-
-            <Text className="text-green-light text-base font-inter-semibold">
-              {currencyFormatter.format(amount)}
-            </Text>
-          </View>
-        }
-      >
-        <ExpenseDetailsSheet expenseId={id} />
-      </BottomSheet>
     </TouchableOpacity>
   )
 }

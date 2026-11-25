@@ -12,17 +12,20 @@ import { Avatar } from "@/components/avatar"
 import { Button } from "@/components/button"
 import { ExpenseStatusType } from "@/components/expense-status"
 import { Input } from "@/components/input"
+import { Loading } from "@/components/loading"
 import { Select } from "@/components/select"
 import { useAuthContext } from "@/contexts/auth-context"
 import { useSnackbarContext } from "@/contexts/snackbar-context"
 import { addExpense } from "@/http/add-expense"
 import { GetActivityResponse } from "@/http/get-activity"
 import { getAllUsers } from "@/http/get-all-users"
+import { getExpense } from "@/http/get-expense"
 import { GetUserActivitiesResponse } from "@/http/get-user-activities"
 import { queryClient } from "@/lib/react-query"
 
-interface NewExpenseSheetProps {
+interface ExpenseSheetProps {
   onClose(): void
+  expenseId?: string
 }
 
 const newExpenseSchema = z.object({
@@ -43,7 +46,7 @@ const newExpenseSchema = z.object({
 
 type NewExpenseSchema = z.infer<typeof newExpenseSchema>
 
-export function NewExpenseSheet({ onClose }: NewExpenseSheetProps) {
+export function ExpenseSheet({ expenseId, onClose }: ExpenseSheetProps) {
   const {
     params: { id: activityId },
   } = useRoute<RouteProp<ActivityStackParamsList, "details">>()
@@ -51,16 +54,30 @@ export function NewExpenseSheet({ onClose }: NewExpenseSheetProps) {
   const { user } = useAuthContext()
   const { notify } = useSnackbarContext()
 
-  const { control, handleSubmit } = useForm<NewExpenseSchema>({
-    resolver: zodResolver(newExpenseSchema),
+  const { data: expense, isLoading: isLoadingExpense } = useQuery({
+    queryKey: ["expenses", expenseId],
+    queryFn: () => (expenseId ? getExpense({ expenseId }) : undefined),
+    enabled: Boolean(expenseId),
   })
 
-  const { data, isLoading } = useQuery({
+  const { data: participants, isLoading: isLoadingParticipants } = useQuery({
     queryKey: ["participants"],
     queryFn: getAllUsers,
     select: data => ({
       users: data.users.filter(item => item.id !== user?.id),
     }),
+    staleTime: Infinity,
+  })
+
+  const { control, handleSubmit } = useForm<NewExpenseSchema>({
+    resolver: zodResolver(newExpenseSchema),
+    defaultValues: {
+      title: expense?.name ?? "",
+      amountInCents: expense?.amountInCents
+        ? expense.amountInCents / 100
+        : undefined,
+      participantsIds: expense?.participants.map(item => item.userId) ?? [],
+    },
   })
 
   const { mutateAsync: addExpenseFn, isPending } = useMutation({
@@ -152,7 +169,7 @@ export function NewExpenseSheet({ onClose }: NewExpenseSheetProps) {
     },
   })
 
-  async function handleCreateExpense(data: NewExpenseSchema) {
+  async function handleStoreExpense(data: NewExpenseSchema) {
     await addExpenseFn({
       ...data,
       activityId,
@@ -162,13 +179,15 @@ export function NewExpenseSheet({ onClose }: NewExpenseSheetProps) {
     })
   }
 
-  const options = data?.users.map(user => ({
+  const options = participants?.users.map(user => ({
     label: user.name,
     value: user.id,
   }))
 
   return (
     <>
+      {isLoadingExpense && <Loading />}
+
       <View className="gap-2">
         <Controller
           control={control}
@@ -197,7 +216,7 @@ export function NewExpenseSheet({ onClose }: NewExpenseSheetProps) {
           )}
         />
 
-        {isLoading ? (
+        {isLoadingParticipants ? (
           <View className="animate-pulse w-full h-12 bg-zinc-800 rounded-lg" />
         ) : (
           <Controller
@@ -209,7 +228,7 @@ export function NewExpenseSheet({ onClose }: NewExpenseSheetProps) {
                   icon="users"
                   placeholder={
                     field.value?.length > 0
-                      ? `${field.value.length.toString()} participante(s)`
+                      ? `${expenseId ? field.value.length - 1 : field.value.length} participante(s)`
                       : "Participantes"
                   }
                   options={options ?? []}
@@ -261,7 +280,7 @@ export function NewExpenseSheet({ onClose }: NewExpenseSheetProps) {
 
       <Button
         disabled={isPending}
-        onPress={() => handleSubmit(handleCreateExpense)()}
+        onPress={() => handleSubmit(handleStoreExpense)()}
       >
         Salvar
       </Button>

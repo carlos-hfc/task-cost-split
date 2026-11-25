@@ -6,7 +6,7 @@ import { colors } from "@/colors"
 import { BottomSheet } from "@/components/bottom-sheet"
 import { Button } from "@/components/button"
 
-import { NewExpenseSheet } from "./new-expense-sheet"
+import { ExpenseSheet } from "./expense-sheet"
 
 export function EmptyExpenses() {
   const [isOpenBottomSheet, setIsOpenBottomSheet] = useState(false)
@@ -40,7 +40,7 @@ export function EmptyExpenses() {
           </Text>
         }
       >
-        <NewExpenseSheet onClose={() => setIsOpenBottomSheet(false)} />
+        <ExpenseSheet onClose={() => setIsOpenBottomSheet(false)} />
       </BottomSheet>
     </View>
   )

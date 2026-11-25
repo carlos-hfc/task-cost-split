@@ -15,7 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { colors } from "@/colors"
 import { cn } from "@/utils/cn"
@@ -34,6 +34,8 @@ export function BottomSheet({
   open,
   titleComponent,
 }: BottomSheetProps) {
+  const insets = useSafeAreaInsets()
+
   const overlay = useRef(new Animated.Value(height)).current
   const container = useRef(new Animated.Value(height)).current
 
@@ -104,7 +106,10 @@ export function BottomSheet({
           `translate-y-${container}`,
         )}
       >
-        <SafeAreaView className="px-6 py-8 gap-8">
+        <View
+          className="px-6 pt-8 gap-8"
+          style={{ paddingBottom: Math.max(insets.bottom, 24) }}
+        >
           <View className="flex-row items-start justify-between">
             {titleComponent}
 
@@ -118,7 +123,7 @@ export function BottomSheet({
           </View>
 
           {children}
-        </SafeAreaView>
+        </View>
       </Animated.View>
     </Modal>
   )

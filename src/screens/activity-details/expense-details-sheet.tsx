@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
+import { useState } from "react"
 import { Text, View } from "react-native"
 
 import { Avatar } from "@/components/avatar"
@@ -17,9 +18,15 @@ import { currencyFormatter } from "@/utils/currency-formatter"
 
 interface ExpenseDetailsSheetProps {
   expenseId: string
+  onEdit(): void
 }
 
-export function ExpenseDetailsSheet({ expenseId }: ExpenseDetailsSheetProps) {
+export function ExpenseDetailsSheet({
+  expenseId,
+  onEdit,
+}: ExpenseDetailsSheetProps) {
+  const [isOpenBottomSheet, setIsOpenBottomSheet] = useState(false)
+
   const { notify } = useSnackbarContext()
 
   const { data, isLoading } = useQuery({
@@ -280,6 +287,7 @@ export function ExpenseDetailsSheet({ expenseId }: ExpenseDetailsSheetProps) {
         <Button
           icon="pencil"
           variant="secondary"
+          onPress={onEdit}
         >
           Editar
         </Button>
